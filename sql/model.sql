@@ -7,6 +7,7 @@ create table users(
     username varchar(64) not null,
     user_password varchar(60) not null,
     user_email varchar(200) not null,
+    token text,
     created_at timestamptz default current_timestamp
 );
 
