@@ -3,13 +3,17 @@ const { UserInputError } = require("apollo-server")
 
 const { row } = require("../../database/postgres")
 const { SECRET_KEY } = require("../../config")
+const { validateRegisterInput } = require("../../util/validators")
 
 module.exports = {
     Mutation: {
         register : async(_, { registerInput: { username, email, password, confirmPassword } }, context, info) => {
-            // TODO Validate user data
-            // TODO Make sure user doesnt already exist
-
+            // Validate user data
+            const { errors, valid } = validateRegisterInput(username, email, password, confirmPassword)
+            if(!valid) {
+                throw new UserInputError('Errors', { errors })
+            }
+            // Make sure user doesnt already exist
             const checkUsername = await row(`select * from users where username = $1`, username)
 
             if(checkUsername) {
