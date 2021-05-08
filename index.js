@@ -3,14 +3,27 @@ const { rows } = require("./database/postgres")
 
 
 const typeDefs = gql`
+    type Post {
+        post_id: ID!,
+        post_body: String!
+        created_at: String!
+        user_id: Int!
+    }
+
     type Query {
-        sayHi: String!
+        getPosts: [Post!]!
     }
 `
 
 const resolvers = {
     Query: {
-        sayHi: () => "Hello World"
+        getPosts: async () => {
+            try {
+                return await rows(`select * from posts`)
+            } catch (error) {
+                throw error
+            }
+        }
     }
 }
 

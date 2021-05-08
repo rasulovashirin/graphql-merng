@@ -1,6 +1,6 @@
 const { Pool } = require("pg")
 
-const { PSQLDB } = require("./config.js")
+const { PSQLDB } = require("../config")
 
 const pool = new Pool(PSQLDB)
 
