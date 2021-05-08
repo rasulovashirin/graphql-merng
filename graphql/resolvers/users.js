@@ -51,7 +51,9 @@ module.exports = {
 
             const token = jwt.sign(user, SECRET_KEY, {expiresIn : '1h'})
 
-            return await row(`UPDATE users set token = $2 WHERE user_id = $1 returning *`, user.user_id, token)
+            user.token = token
+
+            return user
 
         }
     }
