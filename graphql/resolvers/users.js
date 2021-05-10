@@ -29,7 +29,7 @@ module.exports = {
                 return user
 
         },
-        register: async(_, { registerInput: { username, email, password, confirmPassword } }, context, info) => {
+        register: async(_, { registerInput: { username, email, password, confirmPassword } }) => {
 
             const { errors, valid } = validateRegisterInput(username, email, password, confirmPassword)
 
