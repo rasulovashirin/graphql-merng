@@ -15,18 +15,16 @@ module.exports = {
                     throw new UserInputError('Errors', { errors })
                 }
 
-                const user = await row(`select * from users where username = $1 AND user_password = crypt($2, user_password)`, username, password)
+                let user = await row(`select * from users where username = $1 AND user_password = crypt($2, user_password)`, username, password)
 
                 if(!user) {
                     errors.general = 'User not found'
                     throw new UserInputError('User not found', { errors })
                 }
-                user.token = null
+                user =  await row(`UPDATE users set token = null WHERE user_id = $1 returning *`, user.user_id)
+
                 const token = jwt.sign(user, SECRET_KEY)
-
-                user.token = token
-
-                return user
+                return await row(`UPDATE users set token = $2 WHERE user_id = $1 returning *`, user.user_id, token)
 
         },
         register: async(_, { registerInput: { username, email, password, confirmPassword } }) => {
@@ -51,9 +49,7 @@ module.exports = {
 
             const token = jwt.sign(user, SECRET_KEY, {expiresIn : '1h'})
 
-            user.token = token
-
-            return user
+            return await row(`UPDATE users set token = $2 WHERE user_id = $1 returning *`, user.user_id, token)
 
         }
     }

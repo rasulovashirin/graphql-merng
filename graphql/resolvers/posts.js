@@ -1,4 +1,5 @@
 const { rows, row } = require("../../database/postgres")
+const checkAuth = require("../../util/check-auth")
 
 module.exports = {
     Query: {
@@ -21,6 +22,13 @@ module.exports = {
             } catch (error) {
                 throw new Error(error)
             }
+        }
+    },
+    Mutation: {
+        createPost: async (_, { body }, context) => {
+            const user = checkAuth(context)
+
+            return await row(`insert into posts(user_id, post_body) values ($1, $2) returning *`, user.user_id, body)
         }
     }
 }
