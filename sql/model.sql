@@ -27,7 +27,7 @@ create table comments (
 );
 
 create table likes (
-    id serial not null primary key,
+    like_id serial not null primary key,
     user_id int not null references users(user_id),
     post_id int not null references posts(post_id),
     created_at timestamptz default current_timestamp
