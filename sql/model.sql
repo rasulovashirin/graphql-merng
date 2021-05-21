@@ -1,4 +1,4 @@
-create database user_post_app;
+create database merng_app;
 
 create extension pgcrypto;
 
