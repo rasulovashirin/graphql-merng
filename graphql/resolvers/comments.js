@@ -5,7 +5,7 @@ const checkAuth = require("../../util/check-auth")
 
 module.exports = {
     Mutation: {
-        createComment : async (_, {postId, body}, context) => {
+        createComment: async (_, { postId, body }, context) => {
             const {user_id} = checkAuth(context)
 
             if(body.trim() === '') {
@@ -20,6 +20,18 @@ module.exports = {
 
             if(post) {
                 return await row(`insert into comments(user_id, comment_body, post_id) values ($1, $2, $3) returning *`, user_id, body, postId)
+            }
+            else {
+                throw new UserInputError('Post not found')
+            }
+        },
+
+        deleteComment: async (_, { postId, commentId }, context) => {
+            const { user_id } = checkAuth(context)
+
+            const post = await row(`select * from posts where post_id = $1`, postId)
+            if(post) {
+                return row(`delete from comments where comment_id = $1 and user_id = $2 returning *`, commentId, user_id)
             }
             else {
                 throw new UserInputError('Post not found')
