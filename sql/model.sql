@@ -40,3 +40,17 @@ insert into posts(user_id, post_body) values (1, 'In the statement, we only spec
 insert into comments(user_id, comment_body, post_id) values (2, 'How useful post', 1);
 
 insert into likes(user_id, post_id) values (3, 1);
+
+select
+p.post_id,
+p.user_id,
+p.post_body,
+p.created_at,
+c.comment_id,
+c.user_id,
+c.post_id,
+c.comment_body,
+c.created_at
+from posts as p
+join comments as c
+on p.post_id = c.post_id;
